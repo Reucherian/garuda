@@ -60,7 +60,7 @@ type HomeContext struct {
 
 func home(w http.ResponseWriter, r *http.Request, claims *utils.Claims) {
 	if r.Method == "GET" {
-		t, _ := template.ParseFiles("home.gtpl")
+		t, _ := template.ParseFiles("./home.gtpl")
 		followers, err := activityClient.GetFollowings(r.Context(), &model.User{Username: claims.Username})
 		if err != nil {
 			fmt.Println("error:", err)
