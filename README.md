@@ -21,7 +21,8 @@ go run web/web.go
 The above command will start the webserver which will render our html pages from the locally stored go template files (gtpl) using handler functions written in the same module. 
 
 ```bash
-go run cmd/web/web.go
+cd cmd/web
+go run web.go
 ```
 The above command will start the backend server which will communicate to the webserver through grpc using protobuf files found in the model directory.   
 
