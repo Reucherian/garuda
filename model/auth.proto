@@ -1,0 +1,19 @@
+syntax = "proto3";
+import "model/common.proto";
+
+option go_package = "garuda.com/m/model";
+
+
+
+message UserRequest {
+    string username = 1;
+    string password = 2;
+}
+
+
+
+service AuthService 
+{
+    rpc Register(UserRequest) returns (Empty);
+    rpc Login(UserRequest) returns (Empty);
+}

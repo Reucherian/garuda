@@ -1,0 +1,14 @@
+syntax = "proto3";
+option go_package = "garuda.com/m/model";
+
+message Empty {}
+
+message User {
+    string username = 1;
+}
+
+
+message Post {
+    string title = 1;
+    string content = 2;
+}

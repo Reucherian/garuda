@@ -1,0 +1,32 @@
+syntax = "proto3";
+import "model/common.proto";
+
+option go_package = "garuda.com/m/model";
+
+
+message Users {
+    repeated User users = 1;
+}
+
+message Posts {
+    repeated Post posts = 1;
+}
+
+message PostRequest {
+    User user = 1;
+    Post post = 2;
+}
+
+message FollowingRequest {
+    User user = 1;
+    User following = 2;
+}
+
+service ActivityService
+{
+    rpc CreatePost (PostRequest) returns (Empty);
+    rpc GetPosts(User) returns (Posts);
+    rpc AddFollowing(FollowingRequest) returns (Empty);
+    rpc GetFollowings(User) returns (Users);
+    rpc DeleteFollowing(FollowingRequest) returns (Empty);
+}

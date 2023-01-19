@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option go_package = "garuda.com/m/model";
+
+message UserStg {
+  string username = 1;
+  string hash_password = 2;
+  repeated PostStg posts = 3;
+  map<string, int32> following = 4;
+}
+
+message PostStg {
+  string title = 1;
+  string content = 2;
+}
