@@ -1,4 +1,4 @@
-# Distributed Final Project - Garuda (Twitter Clone)
+Garuda
 
 ## Pre-requisites
 
