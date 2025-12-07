@@ -10,6 +10,7 @@ import (
 	"garuda.com/m/cmd/utils"
 	"garuda.com/m/model"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 )
 
 var authClient model.AuthServiceClient
@@ -136,11 +137,11 @@ func logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	authConn, err := grpc.Dial("127.0.0.1:4040", grpc.WithInsecure())
+	authConn, err := grpc.Dial("127.0.0.1:4040", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
-	activityConn, err := grpc.Dial("127.0.0.1:4043", grpc.WithInsecure())
+	activityConn, err := grpc.Dial("127.0.0.1:4043", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
