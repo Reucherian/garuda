@@ -2,3 +2,4 @@
 /.vscode
 infra*
 go.sum
+*.pb.go

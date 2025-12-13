@@ -1,9 +1,8 @@
-# Distributed Final Project - Garuda (Twitter Clone)
+# Garuda 
 
 ## Pre-requisites
 
-To start this project you need to have go installed with all the mnodules mentioned in the project.
-
+To start this project you need to have go installed with all the modules mentioned in the project.
 You will also need to install etcd and goreman to utilize the raft storage option in the project. 
 
 ## Protobuf Generator
