@@ -7,6 +7,11 @@ You will also need to install etcd and goreman to utilize the raft storage optio
 
 ## Protobuf Generator
 
+You will need to install the golang plugins for protobuf messages and grpc.
+```bash
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+```
 Run the ./gen-model.sh shell script found in the root directory to generate the stub codes from the proto files. 
 
 ## Starting Application
