@@ -4,10 +4,10 @@ import (
 	"context"
 	"net"
 
+	"garuda.com/m/backend/cmd/activity"
+	"garuda.com/m/backend/cmd/auth"
+	"garuda.com/m/backend/config"
 	"garuda.com/m/model"
-	"garuda.com/m/web/cmd/activity"
-	"garuda.com/m/web/cmd/auth"
-	"garuda.com/m/web/config"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )

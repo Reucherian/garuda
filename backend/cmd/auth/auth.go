@@ -3,7 +3,7 @@ package auth
 import (
 	"errors"
 
-	"garuda.com/m/web/cmd/auth/storage"
+	"garuda.com/m/backend/cmd/auth/storage"
 	"golang.org/x/crypto/bcrypt"
 )
 

@@ -1,7 +1,7 @@
 package activity
 
 import (
-	"garuda.com/m/web/cmd/auth/storage"
+	"garuda.com/m/backend/cmd/auth/storage"
 )
 
 func CreatePost(username, title, content string) error {

@@ -3,9 +3,9 @@ package storage
 import (
 	"errors"
 
+	"garuda.com/m/backend/cmd/auth/storage/memory"
+	"garuda.com/m/backend/cmd/auth/storage/raft"
 	"garuda.com/m/model"
-	"garuda.com/m/web/cmd/auth/storage/memory"
-	"garuda.com/m/web/cmd/auth/storage/raft"
 )
 
 type Storage interface {

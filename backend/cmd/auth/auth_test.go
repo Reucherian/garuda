@@ -3,7 +3,7 @@ package auth
 import (
 	"testing"
 
-	"garuda.com/m/web/cmd/auth/storage"
+	"garuda.com/m/backend/cmd/auth/storage"
 )
 
 // Test to check if registering a user is working

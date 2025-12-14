@@ -3,8 +3,8 @@ package activity
 import (
 	"testing"
 
-	"garuda.com/m/web/cmd/auth"
-	"garuda.com/m/web/cmd/auth/storage"
+	"garuda.com/m/backend/cmd/auth"
+	"garuda.com/m/backend/cmd/auth/storage"
 )
 
 // Test to check if creating a post is working
