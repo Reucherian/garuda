@@ -3,3 +3,4 @@
 infra*
 go.sum
 *.pb.go
+node_modules/tailwindcss
