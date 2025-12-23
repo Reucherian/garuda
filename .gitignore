@@ -1,6 +1,7 @@
 /.DS_Store
 /.vscode
+frontend/views/**/*.go
 infra*
 go.sum
 *.pb.go
-node_modules/tailwindcss
+frontend/node_modules
