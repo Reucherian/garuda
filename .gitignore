@@ -5,3 +5,4 @@ infra*
 go.sum
 *.pb.go
 frontend/node_modules
+frontend/static/css/styles.css

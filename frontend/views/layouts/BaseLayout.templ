@@ -1,14 +1,52 @@
 package layouts
 
-templ BaseLayout() {
+import "fmt"
+import "garuda.com/m/frontend/views/components"
+
+templ BaseLayout(route string) {
 	<!DOCTYPE html>
 	<html lang="en">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<title>Document</title>
-			<h1>hello</h1>
+			<link rel="stylesheet" href="/static/css/styles.css"/>
+			<script defer src="/static/js/alpine.min.js"></script>
 		</head>
-		<body></body>
+		<body x-data={ fmt.Sprintf("baseLayout('%s')", route) } x-init="loadContent(route);">
+			<script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.data('baseLayout', (initialRoute) => ({
+        loading: false,
+        content: '',
+        route: initialRoute,
+        async loadContent(route) {
+          this.loading = true;
+          try {
+            const response = await fetch(route, {
+              method: 'GET',
+              headers: {
+                'X-Requested-With': 'AlpineJS',
+                'Accept': 'text/html',
+              },
+            });
+            if (!response.ok) {
+              throw new Error('failed to fetch content');
+            }
+            this.content = await response.text();
+            this.route = route;
+            window.history.pushState(null, '', route);
+          } catch (error) {
+            console.log(error);
+          } finally {
+            this.loading = false;
+          }
+        }
+      }))
+    })
+  </script>
+			@components.Navbar()
+			<main x-html="content"></main>
+		</body>
 	</html>
 }

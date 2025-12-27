@@ -4,14 +4,16 @@ BUN_BIN := $(shell which bun)
 FSWATCH_BIN := $(shell which fswatch)
 PROJECT_NAME := $(shell basename $(CURDIR))
 TEMPL_BIN := $(shell which templ)
+ENTR_BIN := $(shell which entr)
 
 # Project info
 PROJECT_NAME := $(shell basename $(CURDIR))
 STATIC_DIR := static
 
 # Build configuration
-BUILD_DIR := build
-MAIN_GO := cmd/$(PROJECT_NAME)/main.go
+BUILD_DIR := frontend/build
+BACKEND_MAIN_GO := backend/main.go
+FRONTEND_MAIN_GO := frontend/main.go
 TEMPL_FILES := $(shell find . -type f -name "*.templ")
 TEMPL_GO_FILES := $(TEMPL_FILES:.templ=_templ.go)
 
@@ -45,48 +47,23 @@ check-deps:
 	@test -n "$(BUN_BIN)" || (printf "✗ Bun not installed\n" && exit 1)
 	@test -n "$(FSWATCH_BIN)" || (printf "✗ fswatch not installed\n" && exit 1)
 	@test -n "$(TEMPL_BIN)" || (printf "✗ templ not installed\n" && exit 1)
+	@test -n "$(ENTR_BIN)" || (printf "✗ entr not installed\n" && exit 1)
 	@printf "$(CHECK) All dependencies ready\n"
-
-create-dirs:
-	@printf "\n$(CYAN)Creating project structure$(RESET)\n"
-	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@mkdir -p $(STATIC_DIR)/js
-	@mkdir -p $(STATIC_DIR)/css
-	@mkdir -p views/{components,layouts,pages}
-	@mkdir -p internal/{handler,middleware,model,service,util}
-	@mkdir -p cmd/$(PROJECT_NAME)
-	@mkdir -p $(BUILD_DIR)
-	@echo "package main\n\nfunc main() {\n\t// TODO: Initialize your server here\n}" > cmd/$(PROJECT_NAME)/main.go
-	@echo "package handler" > internal/handler/handler.go
-	@echo "package middleware" > internal/middleware/middleware.go
-	@echo "package model" > internal/model/model.go
-	@echo "package service" > internal/service/service.go
-	@echo "package util" > internal/util/util.go
-	@echo "// Base layout component" > views/layouts/BaseLayout.templ
-	@echo "// Navigation component" > views/components/Navbar.templ
-	@echo "// Home page component" > views/pages/HomePage.templ
-	@printf "$(CHECK) Project structure created\n"
-
-setup-go:
-	@printf "\n$(CYAN)Initializing Go module$(RESET)\n"
-	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@$(GO_BIN) mod init $(PROJECT_NAME) 2>/dev/null || true
-	@$(GO_BIN) mod tidy >/dev/null 2>&1
-	@printf "$(CHECK) Go modules ready\n"
 
 setup-tailwind:
 	@printf "\n$(CYAN)Setting up Tailwind CSS$(RESET)\n"
 	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@$(BUN_BIN) install tailwindcss@latest >/dev/null 2>&1
-	@echo $(TAILWIND_CONFIG) > tailwind.config.js
-	@echo '@tailwind base;\n@tailwind components;\n@tailwind utilities;' > $(STATIC_DIR)/css/input.css
+	@cd frontend && $(BUN_BIN) add tailwindcss@latest >/dev/null 2>&1
+	@cd frontend && $(BUN_BIN) add -D @tailwindcss/cli>/dev/null 2>&1
+	@cd frontend && echo $(TAILWIND_CONFIG) > tailwind.config.js
+	@echo '@tailwind base;\n@tailwind components;\n@tailwind utilities;' > frontend/$(STATIC_DIR)/css/input.css
 	@printf "$(CHECK) Tailwind CSS ready\n"
 
 download-alpine:
 	@printf "\n$(CYAN)Downloading Alpine.js$(RESET)\n"
 	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@mkdir -p $(STATIC_DIR)/js
-	@curl -s $(ALPINE_URL) -o $(STATIC_DIR)/js/alpine.min.js
+	@cd frontend && mkdir -p $(STATIC_DIR)/js
+	@cd frontend && curl -s $(ALPINE_URL) -o $(STATIC_DIR)/js/alpine.min.js
 	@printf "$(CHECK) Alpine.js ready\n"
 
 build: check-deps
@@ -104,19 +81,24 @@ templ:
 css:
 	@printf "\n$(CYAN)Generating CSS$(RESET)\n"
 	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@$(BUN_BIN) tailwindcss -i $(STATIC_DIR)/css/input.css -o $(STATIC_DIR)/css/styles.css --minify
+	@cd frontend && $(BUN_BIN) tailwindcss -i $(STATIC_DIR)/css/input.css -o $(STATIC_DIR)/css/styles.css --minify
 	@printf "$(CHECK) CSS generated\n"
 
-serve: templ css
-	@printf "\n$(CYAN)Starting server$(RESET)\n"
+backend_serve: 
+	@printf "\n$(CYAN)Starting backend server$(RESET)\n"
 	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
-	@$(GO_BIN) run $(MAIN_GO) serve 
+	@$(GO_BIN) run $(BACKEND_MAIN_GO)
+
+frontend_serve: templ css
+	@printf "\n$(CYAN)Starting frontend server$(RESET)\n"
+	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
+	@cd frontend && $(GO_BIN) run main.go serve 
 
 watch:
 	@printf "\n$(CYAN)Watching for changes$(RESET)\n"
 	@printf "$(DIM)────────────────────────────────────$(RESET)\n"
 	@printf "\n$(CYAN)Rebuilding...$(RESET)\n"
-	@find views -type f -name "*.templ" | entr -r make serve
+	@find frontend/views -type f -name "*.templ" | entr -r make frontend_serve
 
 clean:
 	@printf "\n$(CYAN)Cleaning build files$(RESET)\n"
@@ -125,7 +107,7 @@ clean:
 	@find . -type f -name "*_templ.go" -delete
 	@printf "$(CHECK) Clean complete\n"
 
-init: check-deps create-dirs setup-go setup-tailwind download-alpine
+init: check-deps setup-tailwind download-alpine
 	@printf "\n$(CHECK) Project setup complete!\n"
 
 test:

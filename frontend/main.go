@@ -12,7 +12,7 @@ import (
 
 	"garuda.com/m/frontend/internal/handler"
 	"garuda.com/m/frontend/utils"
-	"garuda.com/m/frontend/views/layouts"
+	"garuda.com/m/frontend/views/pages"
 	"garuda.com/m/model"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -145,16 +145,19 @@ func logout(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	e := echo.New()
-
+	e.Static("/static", "static")
 	// Middleware
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover()) // recover panics as errors for proper error handling
 
 	// Routes
 	e.GET("/", func(c echo.Context) error {
-		return handler.Render(c, http.StatusOK, layouts.BaseLayout())
+		return handler.Render(c, http.StatusOK, pages.HomePage())
 	})
 
+	e.GET("/dashboard", func(c echo.Context) error {
+		return handler.Render(c, http.StatusOK, pages.DashboardPage())
+	})
 	// Start server
 	if err := e.Start(":8080"); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		slog.Error("failed to start server", "error", err)
