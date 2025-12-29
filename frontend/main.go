@@ -158,6 +158,10 @@ func main() {
 	e.GET("/dashboard", func(c echo.Context) error {
 		return handler.Render(c, http.StatusOK, pages.DashboardPage())
 	})
+
+	e.GET("/login", func(c echo.Context) error {
+		return handler.Render(c, http.StatusOK, pages.LoginPage())
+	})
 	// Start server
 	if err := e.Start(":8080"); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		slog.Error("failed to start server", "error", err)
