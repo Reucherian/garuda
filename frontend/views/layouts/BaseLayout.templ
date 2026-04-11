@@ -5,7 +5,7 @@ import "garuda.com/m/frontend/views/components"
 
 templ BaseLayout(route string) {
 	<!DOCTYPE html>
-	<html lang="en">
+	<html lang="en" class="h-full bg-white dark:bg-gray-900">
 		<head>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -13,7 +13,7 @@ templ BaseLayout(route string) {
 			<link rel="stylesheet" href="/static/css/styles.css"/>
 			<script defer src="/static/js/alpine.min.js"></script>
 		</head>
-		<body x-data={ fmt.Sprintf("baseLayout('%s')", route) } x-init="loadContent(route);">
+		<body class="h-full" x-data={ fmt.Sprintf("baseLayout('%s')", route) } x-init="loadContent(route);">
 			<script>
     document.addEventListener('alpine:init', () => {
       Alpine.data('baseLayout', (initialRoute) => ({
